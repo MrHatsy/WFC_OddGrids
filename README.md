@@ -1,2 +1,2 @@
-# WFC_UnevenGrids
+# Wave Function Collapse on Irregular Grids
 
