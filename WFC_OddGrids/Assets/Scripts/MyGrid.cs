@@ -4,22 +4,22 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class grid : MonoBehaviour
+public class MyGrid : MonoBehaviour
 {
     // Create a 10x10 grid of squares of size 1
-    IGrid grid = new SquareGrid(1, new SquareBound(0, 0, 10, 10));
+    // static IGrid grid = new SquareGrid(1, new SquareBound(0, 0, 10, 10));
     // List all 100 cells
-    HashSet<Cell> cells = grid.GetCells();
+    // HashSet<Cell> cells = grid.GetCells();
     // Print the centers of each cell
 
    void Start()
     {    
-        foreach (var cell in cells)
-        {
-            Debug.Log($"{cell}: {grid.GetCellCenter(cell)}");
-        }
+        // foreach (var cell in cells)
+        // {
+        //     Debug.Log($"{cell}: {grid.GetCellCenter(cell)}");
+        // }
 
-        DrawCells();
+        // DrawCells();
     }
 
         void Update()
