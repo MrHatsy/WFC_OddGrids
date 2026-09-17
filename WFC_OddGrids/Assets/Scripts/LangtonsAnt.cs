@@ -7,15 +7,15 @@ using System.Linq;
 
 public class LangtonsAnt : MonoBehaviour
 {
-    private static IGrid grid = new SquareGrid(1f);
+    private static IGrid grid = new HexGrid(1f, HexOrientation.FlatTopped);
     private HashSet<Cell> blackCells = new HashSet<Cell>();
-    private static Cell startCell = new Cell(0, 0);
-    private static var startDir = SquareDir.Up;
+    private static Cell startCell = new Cell(0, 0, 0);
+    private static FTHexDir startDir = FTHexDir.Up;
     private Walker ant = new Walker(grid, startCell, (CellDir)startDir);
 
     Dictionary<Cell, Color> canvas = new Dictionary<Cell, Color>();
-    Color defaultColor = Color.white();
-    Color paintColor = Color.black();
+    Color defaultColor = Color.white;
+    Color paintColor = Color.black;
     
 
     void Start()
@@ -25,13 +25,13 @@ public class LangtonsAnt : MonoBehaviour
 
     void Update()
     {
-        // Walk();
+        Walk();
         DrawGrid();
     }
 
     void Walk()
     {
-        // Debug.Log($"Ant is at {ant.Cell} and is facing {(SquareDir)ant.Dir}");
+        Debug.Log($"Ant is at {ant.Cell} and is facing {(FTHexDir)ant.Dir}");
         ant.MoveForward();
         bool isCurrentCellBlack = blackCells.Contains(ant.Cell);
         if( isCurrentCellBlack )
@@ -48,7 +48,7 @@ public class LangtonsAnt : MonoBehaviour
 
     void DrawGrid()
     {
-        Debug.Log("Draw function");
+        // Debug.Log("Draw function");
         //
     }
 

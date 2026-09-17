@@ -3,6 +3,8 @@ using Sylves;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using UnityEngine.Rendering;
 
 public class Paint : MonoBehaviour
 {
@@ -12,15 +14,24 @@ public class Paint : MonoBehaviour
     private Color paintColor = Color.black;
     private static Material myMaterial;
 
+    // private Camera camera = FindAnyObjectByType(Camera);
+    // [SerializeField] GameObject myCamera;
+
     static void CreateMyMaterial()
     {
         if(!myMaterial){
             
-            // Shader shader = Shader.Find("Hidden/Internal-Colored");
-            // myMaterial = new Material(shader);
-            // myMaterial.hideFlags = hideFlags.HideAndDontSave;
+            //Unity has a built-in shader for drawing simple colored things
+            Shader shader = Shader.Find("Hidden/Internal-Colored");
+            myMaterial = new Material(shader);
+            myMaterial.hideFlags = HideFlags.HideAndDontSave;
             //turn on alpha blending
-            // myMaterial.setInt("")
+            myMaterial.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
+            myMaterial.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+            //Turn of backface culling
+            myMaterial.SetInt("_Cull", (int)UnityEngine.Rendering.CullMode.Off);
+            //Turn off depth writes
+            myMaterial.SetInt("_ZWrite", 0);
         }
     }
 
@@ -30,23 +41,37 @@ public class Paint : MonoBehaviour
         canvas[new Cell(1, -1, 0)] = Color.green;
         canvas[new Cell(0, 1, -1)] = Color.blue;
         Debug.Log("HI");
-        
     }
 
     
     void Update()
     {
-
-        Debug.Log("update");
+        
     }
 
-    void OnPostRender(){
+    void OnEnable(){
+        Debug.Log("Enable");
+        RenderPipelineManager.endCameraRendering += RenderPipelineManager_endCameraRendering;
+    }
+
+    void OnDisable(){
+        Debug.Log("Disable");
+        RenderPipelineManager.endCameraRendering -= RenderPipelineManager_endCameraRendering;
+    }
+
+    private void RenderPipelineManager_endCameraRendering(ScriptableRenderContext context, Camera camera)
+    {
         Draw();
     }
 
+    private void OnPostRender()
+    {
+
+    }
+
     void Draw(){
-        Debug.Log("Draw");
-    
+
+
         var corners = new[] { new Vector3(0, 0), new Vector3(0, 1), new Vector3(1, 0), new Vector3(1, 1) }
             .Select(GetComponent<Camera>().ViewportToWorldPoint);
         var min = corners.Aggregate(Vector3.Min);
@@ -60,7 +85,7 @@ public class Paint : MonoBehaviour
 
         CreateMyMaterial();
         GL.PushMatrix();
-        myMaterial.SetPass();
+        myMaterial.SetPass( 0 );
 
         //iterate over the cells
         foreach (var cell in cells)
