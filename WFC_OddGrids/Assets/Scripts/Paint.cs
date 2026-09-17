@@ -13,8 +13,7 @@ public class Paint : MonoBehaviour
     private Color defaultColor = Color.white;
     private Color paintColor = Color.black;
     private static Material myMaterial;
-
-    // private Camera camera = FindAnyObjectByType(Camera);
+    private Camera camera;
     // [SerializeField] GameObject myCamera;
 
     static void CreateMyMaterial()
@@ -37,10 +36,10 @@ public class Paint : MonoBehaviour
 
     void Start()
     {
+        camera = FindAnyObjectByType<Camera>();
         canvas[new Cell(0, 0, 0)] = Color.red;
         canvas[new Cell(1, -1, 0)] = Color.green;
         canvas[new Cell(0, 1, -1)] = Color.blue;
-        Debug.Log("HI");
     }
 
     
@@ -64,16 +63,10 @@ public class Paint : MonoBehaviour
         Draw();
     }
 
-    private void OnPostRender()
-    {
-
-    }
-
     void Draw(){
 
-
         var corners = new[] { new Vector3(0, 0), new Vector3(0, 1), new Vector3(1, 0), new Vector3(1, 1) }
-            .Select(GetComponent<Camera>().ViewportToWorldPoint);
+            .Select(camera.GetComponent<Camera>().ViewportToWorldPoint);
         var min = corners.Aggregate(Vector3.Min);
         var max = corners.Aggregate(Vector3.Max);
         // flatten the box into the Z=0 plane, where the grid is defined
