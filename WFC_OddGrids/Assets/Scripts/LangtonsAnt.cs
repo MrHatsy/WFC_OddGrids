@@ -8,10 +8,10 @@ using UnityEngine.Rendering;
 
 public class LangtonsAnt : MonoBehaviour
 {
-    private static IGrid grid = new HexGrid(1f, HexOrientation.FlatTopped);
+    private static IGrid grid = new TriangleGrid(1f, TriangleOrientation.FlatTopped);
     private HashSet<Cell> blackCells = new HashSet<Cell>();
     private static Cell startCell = new Cell(0, 0, 0);
-    private static FTHexDir startDir = FTHexDir.Up;
+    private static FTHexDir startDir = FTHexDir.DownRight;
     private Walker ant = new Walker(grid, startCell, (CellDir)startDir);
 
     Dictionary<Cell, Color> canvas = new Dictionary<Cell, Color>();
@@ -51,6 +51,10 @@ public class LangtonsAnt : MonoBehaviour
     void Walk()
     {
         Debug.Log($"Ant is at {ant.Cell} and is facing {(FTHexDir)ant.Dir}");
+        for(int i=0 ; i<3 ; i++)
+        {
+            ant.TurnLeft();
+        }
         ant.MoveForward();
         bool isCurrentCellBlack = blackCells.Contains(ant.Cell);
         if( isCurrentCellBlack )
