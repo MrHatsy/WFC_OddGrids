@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using UnityEngine.Rendering;
 using UnityEngine.InputSystem;
+using System.Dynamic;
 // using System.Numerics;
 // using System.Drawing;
 // using System.Diagnostics;
@@ -13,6 +14,9 @@ public class VoronoiGridScript : MonoBehaviour
 {
     //tunable vars
     [SerializeField] private int cellCount = 50 ;
+    [SerializeField] private float gridWidth = 10f ;
+    [SerializeField] private float gridHeight = 10f ;
+    [SerializeField] private int relaxations = 5;
     
     //input vars
     private InputActions inputs;
@@ -50,11 +54,24 @@ public class VoronoiGridScript : MonoBehaviour
         //first, get the points
         pointList.Clear();
         for( int i = 0; i < cellCount ; i++ ){
-            Vector2 newPoint = new Vector2( UnityEngine.Random.Range(-5f, 5f), 
-                UnityEngine.Random.Range(-5f, 5f));
+            Vector2 newPoint = new Vector2( 
+                UnityEngine.Random.Range(-1 * gridWidth, gridWidth), 
+                UnityEngine.Random.Range(-1 * gridHeight, gridHeight)
+            );
             pointList.Add( newPoint );
         }
 
+        //set up the grid options
+        //lloyd relaxation makes the tiles more evenly spread
+        voronoiGridOptions.LloydRelaxationIterations = relaxations;
+        //border relaxation type Pin stopps the lloyd relaxations 
+            //from bringing the edges of the grid inwards
+        voronoiGridOptions.BorderRelaxation = BorderRelaxation.Relax;
+
+        voronoiGridOptions.ClipMax = new Vector2(gridWidth, gridHeight);
+        voronoiGridOptions.ClipMin = new Vector2(-gridWidth, -gridHeight);
+
+        //then, make the grid
         grid = new VoronoiGrid( pointList, voronoiGridOptions );
 
     }
@@ -117,7 +134,6 @@ public class VoronoiGridScript : MonoBehaviour
         }
     }
     ///////
-
     //Draw the grid
     private IEnumerable<Cell> GetVisibleCells()
     {
