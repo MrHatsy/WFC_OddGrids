@@ -1,5 +1,6 @@
 {
-    "name": "InputSystem_Actions",
+    "version": 1,
+    "name": "InputActions",
     "maps": [
         {
             "name": "Player",
@@ -986,6 +987,34 @@
                     "processors": "",
                     "groups": "XR",
                     "action": "TrackedDeviceOrientation",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "MapGen",
+            "id": "293142be-5260-4836-8754-6d6f3e86a649",
+            "actions": [
+                {
+                    "name": "Regenerate",
+                    "type": "Button",
+                    "id": "4d667cf1-17c0-4261-b632-c184002f8259",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "f96f4244-2b59-4433-b64d-708f7ddbb295",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Regenerate",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
