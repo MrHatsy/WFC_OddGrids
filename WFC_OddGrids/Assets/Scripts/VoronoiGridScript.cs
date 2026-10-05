@@ -7,6 +7,7 @@ using UnityEngine.Rendering;
 using UnityEngine.InputSystem;
 using System.Dynamic;
 // using System.Numerics;
+// using System.Numerics;
 // using System.Drawing;
 // using System.Diagnostics;
 
@@ -16,19 +17,24 @@ public class VoronoiGridScript : MonoBehaviour
     [SerializeField] private int cellCount = 50 ;
     [SerializeField] private float gridWidth = 10f ;
     [SerializeField] private float gridHeight = 10f ;
-    [SerializeField] private int relaxations = 5;
+    [SerializeField] private int hexSize = 15;
+    [SerializeField] private float hexDisturbance = 0.2f;
+    [SerializeField] private int lloydRelaxations = 5;
     
     //input vars
     private InputActions inputs;
     private InputAction regenerateGrid;
+    private InputAction nextGridType;
+    private InputAction prevGridType;
     
 
     //
     
+    private int gridTypeID = 0; // 0 = voronoi, 1= perturbed hex grid
     private VoronoiGridOptions voronoiGridOptions = new VoronoiGridOptions();
+    private static HexBound hexBound;
     private IGrid grid;
-    
-    private List<Vector2> pointList = new List<Vector2>();
+    private List<Vector2> voroPointList = new List<Vector2>();
     private static Material myMaterial;
     private Camera camera;
     private HashSet<Cell> liveCells = new HashSet<Cell>();
@@ -43,6 +49,8 @@ public class VoronoiGridScript : MonoBehaviour
     {    
         inputs = new InputActions();
         regenerateGrid = inputs.MapGen.Regenerate;
+        nextGridType = inputs.MapGen.NextGridType;
+        prevGridType = inputs.MapGen.PrevGridType;
         
         camera = FindAnyObjectByType<Camera>();
         Time.fixedDeltaTime = 1f;
@@ -51,45 +59,71 @@ public class VoronoiGridScript : MonoBehaviour
 
     void CreateGrid()
     {
-        //first, get the points
-        pointList.Clear();
-        for( int i = 0; i < cellCount ; i++ ){
-            Vector2 newPoint = new Vector2( 
-                UnityEngine.Random.Range(-1 * gridWidth, gridWidth), 
-                UnityEngine.Random.Range(-1 * gridHeight, gridHeight)
-            );
-            pointList.Add( newPoint );
+        switch (gridTypeID)
+        {
+            case 0: // Voronoi Grid
+                //first, get the points
+                voroPointList.Clear();
+                for( int i = 0; i < cellCount ; i++ ){
+                    Vector2 newPoint = new Vector2( 
+                        UnityEngine.Random.Range(-1 * gridWidth, gridWidth), 
+                        UnityEngine.Random.Range(-1 * gridHeight, gridHeight)
+                    );
+                    voroPointList.Add( newPoint );
+                }
+
+                //set up the grid options
+                //lloyd relaxation makes the tiles more evenly spread
+                voronoiGridOptions.LloydRelaxationIterations = lloydRelaxations;
+                //border relaxation type Pin stopps the lloyd lloydRelaxations 
+                    //from bringing the edges of the grid inwards
+                voronoiGridOptions.BorderRelaxation = BorderRelaxation.Relax;
+
+                voronoiGridOptions.ClipMax = new Vector2(gridWidth, gridHeight);
+                voronoiGridOptions.ClipMin = new Vector2(-gridWidth, -gridHeight);
+
+                //then, make the grid
+                grid = new VoronoiGrid( voroPointList, voronoiGridOptions );
+                break;
+            case 1: //perterbed hex
+                hexBound = new HexBound(
+                    new Vector3Int(-hexSize,-hexSize,-hexSize), 
+                    new Vector3Int(hexSize,hexSize,hexSize));
+                grid = new HexGrid(1f, HexOrientation.FlatTopped, hexBound);
+                MeshData meshData = grid.ToMeshData();
+                meshData = meshData.Weld();
+                for( int i = 0; i < meshData.vertices.Length ; i++ )
+                {
+                    meshData.vertices[i].x += UnityEngine.Random.Range(-hexDisturbance, hexDisturbance);
+                    meshData.vertices[i].y += UnityEngine.Random.Range(-hexDisturbance, hexDisturbance);
+                }
+                grid = new MeshGrid( meshData, null );
+                break;
         }
-
-        //set up the grid options
-        //lloyd relaxation makes the tiles more evenly spread
-        voronoiGridOptions.LloydRelaxationIterations = relaxations;
-        //border relaxation type Pin stopps the lloyd relaxations 
-            //from bringing the edges of the grid inwards
-        voronoiGridOptions.BorderRelaxation = BorderRelaxation.Relax;
-
-        voronoiGridOptions.ClipMax = new Vector2(gridWidth, gridHeight);
-        voronoiGridOptions.ClipMin = new Vector2(-gridWidth, -gridHeight);
-
-        //then, make the grid
-        grid = new VoronoiGrid( pointList, voronoiGridOptions );
-
     }
 
     void Start()
     {
         startCell = grid.GetCellByIndex(0);
         liveCells.Add(startCell);
-        foreach( Cell cell in grid.GetCells())
-        {
-            Debug.Log($"{cell}: ");
-        }
     }
 
         void Update()
     {
+    
+        //Input detections
         if (regenerateGrid.triggered)
         {
+            CreateGrid();
+        }
+        if (nextGridType.triggered)
+        {
+            gridTypeID++;
+            CreateGrid();
+        }
+        if (prevGridType.triggered)
+        {
+            gridTypeID--;
             CreateGrid();
         }
     }
@@ -99,6 +133,9 @@ public class VoronoiGridScript : MonoBehaviour
         Debug.Log("Enable");
         RenderPipelineManager.endCameraRendering += RenderPipelineManager_endCameraRendering;
         regenerateGrid.Enable();
+        nextGridType.Enable();
+        prevGridType.Enable();
+        regenerateGrid.Enable();
         // regenerateGrid.started += RegenerateGrid();
     }
 
@@ -106,6 +143,8 @@ public class VoronoiGridScript : MonoBehaviour
         Debug.Log("Disable");
         RenderPipelineManager.endCameraRendering -= RenderPipelineManager_endCameraRendering;
         regenerateGrid.Disable();
+        nextGridType.Disable();
+        prevGridType.Disable();
         // regenerateGrid.started -= RegenerateGrid();
     }
 

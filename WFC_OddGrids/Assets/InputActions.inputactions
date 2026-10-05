@@ -1004,6 +1004,24 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "NextGridType",
+                    "type": "Button",
+                    "id": "6fa1a0e1-9671-4697-a0cb-3d5be04c15d3",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "PrevGridType",
+                    "type": "Button",
+                    "id": "6c25cb97-ff5d-4f58-a51c-25d602b19f0a",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -1015,6 +1033,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "Regenerate",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "61be7811-f19c-4b9d-ac5c-317e12ed3a24",
+                    "path": "<Keyboard>/rightBracket",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "NextGridType",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5f9d78d7-b0ea-441b-a06e-89643a06986e",
+                    "path": "<Keyboard>/leftBracket",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PrevGridType",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

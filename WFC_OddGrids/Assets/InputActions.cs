@@ -1090,6 +1090,24 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""NextGridType"",
+                    ""type"": ""Button"",
+                    ""id"": ""6fa1a0e1-9671-4697-a0cb-3d5be04c15d3"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""PrevGridType"",
+                    ""type"": ""Button"",
+                    ""id"": ""6c25cb97-ff5d-4f58-a51c-25d602b19f0a"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -1101,6 +1119,28 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Regenerate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""61be7811-f19c-4b9d-ac5c-317e12ed3a24"",
+                    ""path"": ""<Keyboard>/rightBracket"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""NextGridType"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5f9d78d7-b0ea-441b-a06e-89643a06986e"",
+                    ""path"": ""<Keyboard>/leftBracket"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""PrevGridType"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1196,6 +1236,8 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         // MapGen
         m_MapGen = asset.FindActionMap("MapGen", throwIfNotFound: true);
         m_MapGen_Regenerate = m_MapGen.FindAction("Regenerate", throwIfNotFound: true);
+        m_MapGen_NextGridType = m_MapGen.FindAction("NextGridType", throwIfNotFound: true);
+        m_MapGen_PrevGridType = m_MapGen.FindAction("PrevGridType", throwIfNotFound: true);
     }
 
     ~@InputActions()
@@ -1658,6 +1700,8 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_MapGen;
     private List<IMapGenActions> m_MapGenActionsCallbackInterfaces = new List<IMapGenActions>();
     private readonly InputAction m_MapGen_Regenerate;
+    private readonly InputAction m_MapGen_NextGridType;
+    private readonly InputAction m_MapGen_PrevGridType;
     /// <summary>
     /// Provides access to input actions defined in input action map "MapGen".
     /// </summary>
@@ -1673,6 +1717,14 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "MapGen/Regenerate".
         /// </summary>
         public InputAction @Regenerate => m_Wrapper.m_MapGen_Regenerate;
+        /// <summary>
+        /// Provides access to the underlying input action "MapGen/NextGridType".
+        /// </summary>
+        public InputAction @NextGridType => m_Wrapper.m_MapGen_NextGridType;
+        /// <summary>
+        /// Provides access to the underlying input action "MapGen/PrevGridType".
+        /// </summary>
+        public InputAction @PrevGridType => m_Wrapper.m_MapGen_PrevGridType;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1702,6 +1754,12 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @Regenerate.started += instance.OnRegenerate;
             @Regenerate.performed += instance.OnRegenerate;
             @Regenerate.canceled += instance.OnRegenerate;
+            @NextGridType.started += instance.OnNextGridType;
+            @NextGridType.performed += instance.OnNextGridType;
+            @NextGridType.canceled += instance.OnNextGridType;
+            @PrevGridType.started += instance.OnPrevGridType;
+            @PrevGridType.performed += instance.OnPrevGridType;
+            @PrevGridType.canceled += instance.OnPrevGridType;
         }
 
         /// <summary>
@@ -1716,6 +1774,12 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @Regenerate.started -= instance.OnRegenerate;
             @Regenerate.performed -= instance.OnRegenerate;
             @Regenerate.canceled -= instance.OnRegenerate;
+            @NextGridType.started -= instance.OnNextGridType;
+            @NextGridType.performed -= instance.OnNextGridType;
+            @NextGridType.canceled -= instance.OnNextGridType;
+            @PrevGridType.started -= instance.OnPrevGridType;
+            @PrevGridType.performed -= instance.OnPrevGridType;
+            @PrevGridType.canceled -= instance.OnPrevGridType;
         }
 
         /// <summary>
@@ -1977,5 +2041,19 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnRegenerate(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "NextGridType" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnNextGridType(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "PrevGridType" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnPrevGridType(InputAction.CallbackContext context);
     }
 }
