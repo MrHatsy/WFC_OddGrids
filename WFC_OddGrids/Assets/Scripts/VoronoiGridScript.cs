@@ -31,6 +31,7 @@ public class VoronoiGridScript : MonoBehaviour
     //
     
     private int gridTypeID = 0; // 0 = voronoi, 1= perturbed hex grid
+    private int noOfGrids = 5;
     private VoronoiGridOptions voronoiGridOptions = new VoronoiGridOptions();
     private IGrid grid;
     private List<Vector2> voroPointList = new List<Vector2>();
@@ -63,6 +64,8 @@ public class VoronoiGridScript : MonoBehaviour
         HexBound hexBound = new HexBound(
                     new Vector3Int(-boundSize,-boundSize,-boundSize), 
                     new Vector3Int(boundSize,boundSize,boundSize));
+        if(gridTypeID >= noOfGrids) gridTypeID = 0;
+        if(gridTypeID < 0) gridTypeID = noOfGrids-1;
 
         switch (gridTypeID)
         {
@@ -90,19 +93,7 @@ public class VoronoiGridScript : MonoBehaviour
                 //then, make the grid
                 grid = new VoronoiGrid( voroPointList, voronoiGridOptions );
             break;
-            case 1: //perterbed hex
-                grid = new HexGrid(1f, HexOrientation.FlatTopped, hexBound);
-                //we need to turn the grid into a mesh so that we can shift the points
-                meshData = grid.ToMeshData();
-                meshData = meshData.Weld(out array, 0.2f);
-                for( int i = 0; i < meshData.vertices.Length ; i++ )
-                {
-                    meshData.vertices[i].x += UnityEngine.Random.Range(-hexDisturbance, hexDisturbance);
-                    meshData.vertices[i].y += UnityEngine.Random.Range(-hexDisturbance, hexDisturbance);
-                }
-                grid = new MeshGrid( meshData, null );
-            break;
-            case 2: //townscaper grid
+            case 1: //townscaper
                 int triBoundSize = boundSize/2; 
                 //because we're subdividing this, we'll use half the bound size
                 TriangleBound triBound = new TriangleBound(
@@ -117,6 +108,19 @@ public class VoronoiGridScript : MonoBehaviour
                 meshData = meshData.Weld(out array, 0.2f);
                 meshData = meshData.Relax();
 
+                grid = new MeshGrid( meshData, null );
+            break;
+            case 2: //perturbed hex grid
+                
+                grid = new HexGrid(1f, HexOrientation.FlatTopped, hexBound);
+                //we need to turn the grid into a mesh so that we can shift the points
+                meshData = grid.ToMeshData();
+                meshData = meshData.Weld(out array, 0.2f);
+                for( int i = 0; i < meshData.vertices.Length ; i++ )
+                {
+                    meshData.vertices[i].x += UnityEngine.Random.Range(-hexDisturbance, hexDisturbance);
+                    meshData.vertices[i].y += UnityEngine.Random.Range(-hexDisturbance, hexDisturbance);
+                }
                 grid = new MeshGrid( meshData, null );
             break;
             case 3: //square grid
