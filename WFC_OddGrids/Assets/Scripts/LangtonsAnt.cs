@@ -18,7 +18,7 @@ public class LangtonsAnt : MonoBehaviour
     Color defaultColor = Color.white;
     Color paintColor = Color.black;
     private static Material myMaterial;
-    private Camera camera;
+    private Camera myCamrera;
     
     static void CreateMyMaterial()
     {
@@ -40,7 +40,7 @@ public class LangtonsAnt : MonoBehaviour
 
     void Start()
     {
-        camera = FindAnyObjectByType<Camera>();
+        myCamrera = FindAnyObjectByType<Camera>();
     }
 
     void Update()
@@ -79,7 +79,7 @@ public class LangtonsAnt : MonoBehaviour
         RenderPipelineManager.endCameraRendering -= RenderPipelineManager_endCameraRendering;
     }
 
-    private void RenderPipelineManager_endCameraRendering(ScriptableRenderContext context, Camera camera)
+    private void RenderPipelineManager_endCameraRendering(ScriptableRenderContext context, Camera myCamrera)
     {
         Draw();
     }
@@ -87,7 +87,7 @@ public class LangtonsAnt : MonoBehaviour
     void Draw(){
 
         var corners = new[] { new Vector3(0, 0), new Vector3(0, 1), new Vector3(1, 0), new Vector3(1, 1) }
-            .Select(camera.GetComponent<Camera>().ViewportToWorldPoint);
+            .Select(myCamrera.GetComponent<Camera>().ViewportToWorldPoint);
         var min = corners.Aggregate(Vector3.Min);
         var max = corners.Aggregate(Vector3.Max);
         // flatten the box into the Z=0 plane, where the grid is defined

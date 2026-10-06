@@ -11,7 +11,7 @@ public class HexGridScript : MonoBehaviour
     private static HexBound hexBound = new HexBound(new Vector3Int(-15,-15,-15), new Vector3Int(15,15,15));
     private IGrid grid = new HexGrid(1f, HexOrientation.FlatTopped, hexBound);
     private static Material myMaterial;
-    private Camera camera;
+    private Camera myCamera;
     private HashSet<Cell> liveCells = new HashSet<Cell>();
     // private Dictionary<Cell, Color> canvas = new Dictionary<Cell, Color>();
     private Color deadColor = Color.white;
@@ -22,7 +22,7 @@ public class HexGridScript : MonoBehaviour
 
    void Awake()
     {    
-        camera = FindAnyObjectByType<Camera>();
+        myCamera = FindAnyObjectByType<Camera>();
         Time.fixedDeltaTime = 1f;
     }
 
@@ -83,7 +83,7 @@ public class HexGridScript : MonoBehaviour
     private IEnumerable<Cell> GetVisibleCells()
     {
         var corners = new[] { new Vector3(0, 0), new Vector3(0, 1), new Vector3(1, 0), new Vector3(1, 1) }
-            .Select(camera.GetComponent<Camera>().ViewportToWorldPoint);
+            .Select(myCamera.GetComponent<Camera>().ViewportToWorldPoint);
         var min = corners.Aggregate(Vector3.Min);
         var max = corners.Aggregate(Vector3.Max);
         // flatten the box into the Z=0 plane, where the grid is defined

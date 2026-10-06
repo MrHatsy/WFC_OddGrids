@@ -28,20 +28,23 @@ public class VoronoiGridScript : MonoBehaviour
     private InputAction prevGridType;
     
 
-    //
-    
-    private int gridTypeID = 0; // 0 = voronoi, 1= perturbed hex grid
+    //constants
     private int noOfGrids = 5;
-    private VoronoiGridOptions voronoiGridOptions = new VoronoiGridOptions();
-    private IGrid grid;
-    private List<Vector2> voroPointList = new List<Vector2>();
+    //constants (set up in code)
+    private Camera myCamera;
     private static Material myMaterial;
-    private Camera camera;
+
+    //variables
+    private int gridTypeID = 0; // 0 = voronoi, 1= perturbed hex grid
+    private IGrid grid;
+    private VoronoiGridOptions voronoiGridOptions = new VoronoiGridOptions();
+    private List<Vector2> voroPointList = new List<Vector2>();
+    
+
     private HashSet<Cell> liveCells = new HashSet<Cell>();
     // private Dictionary<Cell, Color> canvas = new Dictionary<Cell, Color>();
     private Color deadColor = Color.white;
     private Color livingColor = Color.red;
-
     private Cell startCell;
 
 
@@ -52,8 +55,7 @@ public class VoronoiGridScript : MonoBehaviour
         nextGridType = inputs.MapGen.NextGridType;
         prevGridType = inputs.MapGen.PrevGridType;
         
-        camera = FindAnyObjectByType<Camera>();
-        Time.fixedDeltaTime = 1f;
+        myCamera = FindAnyObjectByType<Camera>();
         CreateGrid();
     }
 
@@ -149,10 +151,15 @@ public class VoronoiGridScript : MonoBehaviour
         liveCells.Add(startCell);
     }
 
-        void Update()
+    void Update()
     {
     
         //Input detections
+        DetectInputs();
+    }
+
+    void DetectInputs()
+    {
         if (regenerateGrid.triggered)
         {
             CreateGrid();
@@ -191,7 +198,7 @@ public class VoronoiGridScript : MonoBehaviour
 
     
 
-    private void RenderPipelineManager_endCameraRendering(ScriptableRenderContext context, Camera camera)
+    private void RenderPipelineManager_endCameraRendering(ScriptableRenderContext context, Camera myCamera)
     {
         DrawGrid();
     }
@@ -220,7 +227,7 @@ public class VoronoiGridScript : MonoBehaviour
         var corners = new[] { 
             new Vector3(0, 0), new Vector3(0, 1), 
             new Vector3(1, 0), new Vector3(1, 1) 
-        }.Select(camera.GetComponent<Camera>().ViewportToWorldPoint);
+        }.Select(myCamera.GetComponent<Camera>().ViewportToWorldPoint);
         var min = corners.Aggregate(Vector3.Min);
         var max = corners.Aggregate(Vector3.Max);
         // flatten the box into the Z=0 plane, where the grid is defined
