@@ -35,8 +35,7 @@ public class Paint : MonoBehaviour
 
     void Start()
     {
-        myCamera
- = FindAnyObjectByType<Camera>();
+        myCamera= FindAnyObjectByType<Camera>();
         canvas[new Cell(0, 0, 0)] = Color.red;
         canvas[new Cell(1, -1, 0)] = Color.green;
         canvas[new Cell(0, 1, -1)] = Color.blue;
@@ -66,8 +65,7 @@ public class Paint : MonoBehaviour
     void Draw(){
 
         var corners = new[] { new Vector3(0, 0), new Vector3(0, 1), new Vector3(1, 0), new Vector3(1, 1) }
-            .Select(myCamera
-    .GetComponent<Camera>().ViewportToWorldPoint);
+            .Select(myCamera.GetComponent<Camera>().ViewportToWorldPoint);
         var min = corners.Aggregate(Vector3.Min);
         var max = corners.Aggregate(Vector3.Max);
         // flatten the box into the Z=0 plane, where the grid is defined

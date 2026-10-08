@@ -42,8 +42,8 @@ public class VoronoiGridScript : MonoBehaviour
     
 
     private HashSet<Cell> liveCells = new HashSet<Cell>();
-    // private Dictionary<Cell, Color> canvas = new Dictionary<Cell, Color>();
-    private Color deadColor = Color.white;
+    private Dictionary<Cell, Tile> tileList = new Dictionary<Cell, Tile>();
+    private Color deadColor = Color.black;
     private Color livingColor = Color.red;
     private Cell startCell;
 
@@ -57,6 +57,7 @@ public class VoronoiGridScript : MonoBehaviour
         
         myCamera = FindAnyObjectByType<Camera>();
         CreateGrid();
+        //add all the cells to the tileList
     }
 
     void CreateGrid()
@@ -143,17 +144,21 @@ public class VoronoiGridScript : MonoBehaviour
             count++;
         }
         Debug.Log(count);
+
+        tileList.Clear();
+        foreach( Cell c in grid.GetCells() )
+        {
+            tileList.Add(c, new Tile());
+        }
     }
 
     void Start()
     {
-        startCell = grid.GetCellByIndex(0);
-        liveCells.Add(startCell);
+       
     }
 
     void Update()
     {
-    
         //Input detections
         DetectInputs();
     }
@@ -249,8 +254,8 @@ public class VoronoiGridScript : MonoBehaviour
         foreach (var cell in cells)
         {
             // //get the color from the dictionary
-            // Color color = canvas.TryGetValue(cell, out var c) ? c : deadColor;
-            Color color = liveCells.Contains(cell) ? livingColor : deadColor;
+            // Color color = tileList.TryGetValue(cell, out var c) ? c : deadColor;
+            Color color = tileList.TryGetValue(cell, out var tile) ? tile.color : deadColor;
 
             //read the verticies of the cell
             var verticies = grid.GetPolygon(cell);
