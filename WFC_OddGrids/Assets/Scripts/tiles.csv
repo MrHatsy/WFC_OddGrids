@@ -1,1 +1,0 @@
-TypeID(int),Adj,Count(int),Weight(float),Color(hexcode)

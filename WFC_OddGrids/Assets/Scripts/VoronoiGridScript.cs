@@ -146,9 +146,18 @@ public class VoronoiGridScript : MonoBehaviour
         Debug.Log(count);
 
         tileList.Clear();
+        //initialize every tile
         foreach( Cell c in grid.GetCells() )
         {
             tileList.Add(c, new Tile());
+        }
+        //let each tile know its neighbours
+        foreach( Cell c in grid.GetCells() )
+        {
+            foreach( Cell n in grid.GetNeighbours(c) )
+            {
+                tileList[c].AddNeighbour(tileList[n]);
+            }
         }
     }
 
@@ -181,7 +190,7 @@ public class VoronoiGridScript : MonoBehaviour
         }
     }
 
-    //setup for rendering pipeline
+    //setup for rendering pipeline and inputs
     void OnEnable(){
         Debug.Log("Enable");
         RenderPipelineManager.endCameraRendering += RenderPipelineManager_endCameraRendering;
