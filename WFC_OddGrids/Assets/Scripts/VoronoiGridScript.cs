@@ -6,6 +6,8 @@ using System.Linq;
 using UnityEngine.Rendering;
 using UnityEngine.InputSystem;
 using System.Dynamic;
+using System.IO;
+using UnityEditor.ShaderGraph.Internal;
 // using System.Numerics;
 // using System.Numerics;
 // using System.Drawing;
@@ -29,7 +31,7 @@ public class VoronoiGridScript : MonoBehaviour
     
 
     //constants
-    private int noOfGrids = 5;
+    private int noOfGrids = 6;
     //constants (set up in code)
     private Camera myCamera;
     private static Material myMaterial;
@@ -46,6 +48,7 @@ public class VoronoiGridScript : MonoBehaviour
     private Color deadColor = Color.black;
     private Color livingColor = Color.red;
     private Cell startCell;
+
 
 
    void Awake()
@@ -99,10 +102,10 @@ public class VoronoiGridScript : MonoBehaviour
             case 1: //townscaper
                 int triBoundSize = boundSize/2; 
                 //because we're subdividing this, we'll use half the bound size
-                TriangleBound triBound = new TriangleBound(
+                TriangleBound bigTriBound = new TriangleBound(
                         new Vector3Int(-triBoundSize,-triBoundSize,-triBoundSize), 
                         new Vector3Int(triBoundSize,triBoundSize,triBoundSize));
-                grid = new TriangleGrid(2f, TriangleOrientation.FlatSides, triBound);
+                grid = new TriangleGrid(2f, TriangleOrientation.FlatSides, bigTriBound);
                 //we need to turn the grid into a mesh so we can mess with it
                 meshData = grid.ToMeshData();
                 meshData = meshData.RandomPairing();
@@ -135,15 +138,14 @@ public class VoronoiGridScript : MonoBehaviour
             case 4: //hex grid
                 grid = new HexGrid(1f, HexOrientation.FlatTopped, hexBound);
             break;
+            case 5: //tri grid
+                TriangleBound triBound = new TriangleBound(
+                    new Vector3Int(-boundSize,-boundSize,-boundSize), 
+                    new Vector3Int(boundSize,boundSize,boundSize));
+                grid = new TriangleGrid(1f, TriangleOrientation.FlatTopped, triBound);
+            break;
         }
 
-        //count cells
-        int count = 0;
-        foreach( Cell c in grid.GetCells())
-        {
-            count++;
-        }
-        Debug.Log(count);
 
         tileList.Clear();
         //initialize every tile
@@ -159,6 +161,7 @@ public class VoronoiGridScript : MonoBehaviour
                 tileList[c].AddNeighbour(tileList[n]);
             }
         }
+        
     }
 
     void Start()
@@ -170,6 +173,27 @@ public class VoronoiGridScript : MonoBehaviour
     {
         //Input detections
         DetectInputs();
+
+        WaveFunctionCollapse();
+    }
+
+    void WaveFunctionCollapse()
+    {
+        //find the lowest entropy cell, and lock in its type
+        WFCObserve();
+
+        //
+        WFCPropogate();
+    }
+
+    void WFCObserve()
+    {
+        
+    }
+
+    void WFCPropogate()
+    {
+        
     }
 
     void DetectInputs()

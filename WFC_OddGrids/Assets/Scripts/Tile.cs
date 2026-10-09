@@ -15,7 +15,8 @@ public class Tile
 
     public Tile()
     {
-        //TODO: fill entropy
+        //TODO//
+        // fill entropy
     }
 
 
