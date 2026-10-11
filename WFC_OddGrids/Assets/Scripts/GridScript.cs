@@ -32,7 +32,6 @@ public class GridScript : MonoBehaviour
 
     //constants
     private int noOfGrids = 6;
-    //constants (set up in code)
     private Camera myCamera;
     private static Material myMaterial;
     public TileNeighbourIndex tileNeighbourIndex;
@@ -58,6 +57,14 @@ public class GridScript : MonoBehaviour
         
         myCamera = FindAnyObjectByType<Camera>();
         CreateGrid();
+    }
+
+    void Update()
+    {
+        //Input detections
+        DetectInputs();
+
+        WaveFunctionCollapse();
     }
 
     void CreateGrid()
@@ -161,19 +168,6 @@ public class GridScript : MonoBehaviour
         
     }
 
-    void Start()
-    {
-       
-    }
-
-    void Update()
-    {
-        //Input detections
-        DetectInputs();
-
-        WaveFunctionCollapse();
-    }
-
     void WaveFunctionCollapse()
     {
         //find the lowest entropy cell, and lock in its type
@@ -185,6 +179,54 @@ public class GridScript : MonoBehaviour
 
     void WFCObserve()
     {
+        Tile minEntrTile = FindLowestEntropy();
+        if(minEntrTile == null)
+        {
+            //TODO TODO all tiles are collapsed, we are ready to end generation
+        }
+        else
+        {
+            //collapse the tile and mark it for update during propogation
+            minEntrTile.Collapse();
+            minEntrTile.mark = true;
+        }
+    }
+
+    Tile FindLowestEntropy()
+    {
+        //if entropy == 1, tile is collapsed, if e > 1, tile not collapsed
+        int minEntropy = 100;
+        List<Tile> minEntropyTileList = new List<Tile>();
+        Tile minEntropyTile;
+        foreach( Cell c in grid.GetCells() )
+        {
+            int myEntropy = tileList[c].MyEntropy;
+            if(myEntropy == 0)
+            {
+                // TODO: ERROE
+                //ERROR ERROR ERROE this grid is invalid as this tile cannot collapse
+            }
+            else if( myEntropy < minEntropy && myEntropy > 1)
+            {
+                minEntropy = myEntropy;
+                minEntropyTileList.Clear();
+                minEntropyTileList.Add(tileList[c]);   
+            }
+            else if( myEntropy == minEntropy)
+            {
+                //make a list of all the tiles with min entropy so we can pick
+                    //a random tile if there are multiple
+                minEntropyTileList.Add(tileList[c]); 
+            }
+        }
+        int randomItem = UnityEngine.Random.Range(0, minEntropyTileList.Count);
+        minEntropyTile = minEntropyTileList[randomItem];
+        if(minEntropy == 100)
+        {
+            //all tiles are collapsed
+            return null;    
+        }
+        return minEntropyTile;
         
     }
 
@@ -285,7 +327,7 @@ public class GridScript : MonoBehaviour
         {
             // //get the color from the dictionary
             // Color color = tileList.TryGetValue(cell, out var c) ? c : deadColor;
-            Color color = tileList.TryGetValue(cell, out var tile) ? tile.color : Color.magenta;
+            Color color = tileList.TryGetValue(cell, out var tile) ? tile.MyColor : Color.magenta;
 
             //read the verticies of the cell
             var verticies = grid.GetPolygon(cell);

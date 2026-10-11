@@ -3,7 +3,8 @@ using System.IO;
 using System;
 
 public class TileNeighbourIndex
-{
+{  
+    //constants
     private static int amountOfTileTypes;
     private static int[] tileWeightIndex;
     private static Color[] tileColorIndex;
@@ -32,7 +33,7 @@ public class TileNeighbourIndex
         return tileNeighbourMaxIndex[n,m];
     }
 
-
+    //methods
     public TileNeighbourIndex()
     {
         String line;
