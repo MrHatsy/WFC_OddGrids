@@ -35,6 +35,7 @@ public class VoronoiGridScript : MonoBehaviour
     //constants (set up in code)
     private Camera myCamera;
     private static Material myMaterial;
+    public TileNeighbourIndex tileNeighbourIndex;
 
     //variables
     private int gridTypeID = 0; // 0 = voronoi, 1= perturbed hex grid
@@ -43,11 +44,7 @@ public class VoronoiGridScript : MonoBehaviour
     private List<Vector2> voroPointList = new List<Vector2>();
     
 
-    private HashSet<Cell> liveCells = new HashSet<Cell>();
     private Dictionary<Cell, Tile> tileList = new Dictionary<Cell, Tile>();
-    private Color deadColor = Color.black;
-    private Color livingColor = Color.red;
-    private Cell startCell;
 
 
 
@@ -57,10 +54,10 @@ public class VoronoiGridScript : MonoBehaviour
         regenerateGrid = inputs.MapGen.Regenerate;
         nextGridType = inputs.MapGen.NextGridType;
         prevGridType = inputs.MapGen.PrevGridType;
+        tileNeighbourIndex = new TileNeighbourIndex();
         
         myCamera = FindAnyObjectByType<Camera>();
         CreateGrid();
-        //add all the cells to the tileList
     }
 
     void CreateGrid()
@@ -288,7 +285,7 @@ public class VoronoiGridScript : MonoBehaviour
         {
             // //get the color from the dictionary
             // Color color = tileList.TryGetValue(cell, out var c) ? c : deadColor;
-            Color color = tileList.TryGetValue(cell, out var tile) ? tile.color : deadColor;
+            Color color = tileList.TryGetValue(cell, out var tile) ? tile.color : Color.magenta;
 
             //read the verticies of the cell
             var verticies = grid.GetPolygon(cell);
