@@ -13,7 +13,7 @@ using UnityEditor.ShaderGraph.Internal;
 // using System.Drawing;
 // using System.Diagnostics;
 
-public class VoronoiGridScript : MonoBehaviour
+public class GridScript : MonoBehaviour
 {
     //tunable vars
     [SerializeField] private int cellCount = 50 ;
