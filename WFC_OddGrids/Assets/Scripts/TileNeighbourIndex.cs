@@ -40,12 +40,12 @@ public class TileNeighbourIndex
         StreamReader reader;
         String[] splitLine;
         int lineNum;
-        
+
         //get amount of tiles from tiletypeindex.csv
-        amountOfTileTypes = 0; 
+        amountOfTileTypes = 0;
         reader = new StreamReader("./Assets/Data/tileTypeIndex.csv");
         line = reader.ReadLine();
-        while( line != null)
+        while (line != null)
         {
             amountOfTileTypes++;
             line = reader.ReadLine();
@@ -59,17 +59,17 @@ public class TileNeighbourIndex
         tileNeighbourMaxIndex = new int[amountOfTileTypes, amountOfTileTypes];
 
         //TODO fill in weigh index
-        
+
         //TODO: Color index as well;
         lineNum = 0;
         reader = new StreamReader("./Assets/Data/tileTypeIndex.csv");
         line = reader.ReadLine();
-        while(line != null)
+        while (line != null)
         {
             splitLine = line.Split(',');
-            tileWeightIndex[lineNum] =  Int32.Parse(splitLine[2]);
+            tileWeightIndex[lineNum] = Int32.Parse(splitLine[2]);
             tileColorIndex[lineNum] = new Color(
-                Single.Parse(splitLine[3]), 
+                Single.Parse(splitLine[3]),
                 Single.Parse(splitLine[4]),
                 Single.Parse(splitLine[5]));
             line = reader.ReadLine();
@@ -82,10 +82,10 @@ public class TileNeighbourIndex
         lineNum = 0;
         reader = new StreamReader("./Assets/Data/tileNeighbourMinIndex.csv");
         line = reader.ReadLine();
-        while( line != null)
-        {            
+        while (line != null)
+        {
             splitLine = line.Split(',');
-            for( int i = 0 ; i < splitLine.Length ; i++)
+            for (int i = 0; i < splitLine.Length; i++)
             {
                 tileNeighbourMinIndex[lineNum, i] = Int32.Parse(splitLine[i]);
             }
@@ -97,16 +97,17 @@ public class TileNeighbourIndex
         lineNum = 0;
         reader = new StreamReader("./Assets/Data/tileNeighbourMaxIndex.csv");
         line = reader.ReadLine();
-        while( line != null)
-        {            
+        while (line != null)
+        {
             splitLine = line.Split(',');
-            for( int i = 0 ; i < splitLine.Length ; i++)
+            for (int i = 0; i < splitLine.Length; i++)
             {
                 tileNeighbourMaxIndex[lineNum, i] = Int32.Parse(splitLine[i]);
             }
             line = reader.ReadLine();
             lineNum++;
         }
+        
     }
 }
 

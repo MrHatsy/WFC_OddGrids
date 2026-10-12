@@ -8,6 +8,7 @@ using UnityEngine.InputSystem;
 using System.Dynamic;
 using System.IO;
 using UnityEditor.ShaderGraph.Internal;
+using Unity.VisualScripting;
 // using System.Numerics;
 // using System.Numerics;
 // using System.Drawing;
@@ -35,6 +36,7 @@ public class GridScript : MonoBehaviour
     private Camera myCamera;
     private static Material myMaterial;
     public TileNeighbourIndex tileNeighbourIndex;
+    private bool drawOutlines = true;
 
     //variables
     private int gridTypeID = 0; // 0 = voronoi, 1= perturbed hex grid
@@ -173,16 +175,19 @@ public class GridScript : MonoBehaviour
         //find the lowest entropy cell, and lock in its type
         WFCObserve();
 
-        //
+        //propogate changes now that a cell has been collapsed
         WFCPropogate();
+        
     }
 
     void WFCObserve()
     {
+        Debug.Log("Observing...");
         Tile minEntrTile = FindLowestEntropy();
-        if(minEntrTile == null)
+        if (minEntrTile == null)
         {
             //TODO TODO all tiles are collapsed, we are ready to end generation
+            Debug.Log("Ready to end generation");
         }
         else
         {
@@ -201,25 +206,27 @@ public class GridScript : MonoBehaviour
         foreach( Cell c in grid.GetCells() )
         {
             int myEntropy = tileList[c].MyEntropy;
-            if(myEntropy == 0)
+            if (myEntropy == 0)
             {
                 // TODO: ERROE
                 //ERROR ERROR ERROE this grid is invalid as this tile cannot collapse
             }
-            else if( myEntropy < minEntropy && myEntropy > 1)
+            else if (myEntropy < minEntropy && myEntropy > 1)
             {
                 minEntropy = myEntropy;
                 minEntropyTileList.Clear();
-                minEntropyTileList.Add(tileList[c]);   
+                minEntropyTileList.Add(tileList[c]);
             }
-            else if( myEntropy == minEntropy)
+            else if (myEntropy == minEntropy)
             {
                 //make a list of all the tiles with min entropy so we can pick
-                    //a random tile if there are multiple
-                minEntropyTileList.Add(tileList[c]); 
+                //a random tile if there are multiple
+                minEntropyTileList.Add(tileList[c]);
             }
         }
         int randomItem = UnityEngine.Random.Range(0, minEntropyTileList.Count);
+        // Debug.Log("Random item: " + randomItem + " List size: " + minEntropyTileList.Count);
+        
         minEntropyTile = minEntropyTileList[randomItem];
         if(minEntropy == 100)
         {
@@ -232,6 +239,33 @@ public class GridScript : MonoBehaviour
 
     void WFCPropogate()
     {
+        Debug.Log("Propogating...");
+        bool keepPropogating = true;
+        while (keepPropogating )
+        {
+            keepPropogating = false;
+            foreach (Cell c in grid.GetCells())
+            {
+                Tile t = tileList[c];
+                //for each cell that has been marked to update
+                if (t.mark)
+                {
+                    t.mark = false;
+                    //if there are cells that need to be updated, keep propgating
+                    t.Propogate();
+                }
+            }
+
+            foreach (Cell c in grid.GetCells())
+            {
+                if (tileList[c].mark)
+                {
+                    keepPropogating = true;
+                }
+            }
+        }
+
+
         
     }
 
@@ -272,8 +306,6 @@ public class GridScript : MonoBehaviour
         prevGridType.Disable();
         // regenerateGrid.started -= RegenerateGrid();
     }
-
-    
 
     private void RenderPipelineManager_endCameraRendering(ScriptableRenderContext context, Camera myCamera)
     {
@@ -344,26 +376,30 @@ public class GridScript : MonoBehaviour
             GL.End();
         }
         //draw cell outlines
-        foreach (var cell in cells)
+        if (drawOutlines = true)
         {
-            //get the color from the hashset
-            Color color = Color.black;
-
-            //read the verticies of the cell
-            var verticies = grid.GetPolygon(cell);
-            
-            //split up the polygon into lines, and draw each one
-            GL.Begin(GL.LINES);
-            GL.Color(color.linear);
-            for( int i = 1 ; i < verticies.Length ; i++ )
+            foreach (var cell in cells)
             {
-                GL.Vertex(verticies[i]);
-                GL.Vertex(verticies[i-1]);
-                //NOTE: this will not draw one of the lines, 
-                //but the tiles next to it should make up for that
+                //get the color from the hashset
+                Color color = Color.black;
+
+                //read the verticies of the cell
+                var verticies = grid.GetPolygon(cell);
+
+                //split up the polygon into lines, and draw each one
+                GL.Begin(GL.LINES);
+                GL.Color(color.linear);
+                for (int i = 1; i < verticies.Length; i++)
+                {
+                    GL.Vertex(verticies[i]);
+                    GL.Vertex(verticies[i - 1]);
+                    //NOTE: this will not draw one of the lines, 
+                    //but the tiles next to it should make up for that
+                }
+                GL.End();
             }
-            GL.End();
         }
+        
         GL.PopMatrix();
     }
     //////
