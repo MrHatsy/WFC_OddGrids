@@ -29,6 +29,7 @@ public class GridScript : MonoBehaviour
     private InputAction regenerateGrid;
     private InputAction nextGridType;
     private InputAction prevGridType;
+    private InputAction toggleOutlines;
     
 
     //constants
@@ -55,6 +56,7 @@ public class GridScript : MonoBehaviour
         regenerateGrid = inputs.MapGen.Regenerate;
         nextGridType = inputs.MapGen.NextGridType;
         prevGridType = inputs.MapGen.PrevGridType;
+        toggleOutlines = inputs.MapGen.ToggleOutlines;
         tileNeighbourIndex = new TileNeighbourIndex();
         
         myCamera = FindAnyObjectByType<Camera>();
@@ -285,25 +287,33 @@ public class GridScript : MonoBehaviour
             gridTypeID--;
             CreateGrid();
         }
+        if (toggleOutlines.triggered)
+        {
+            drawOutlines = !drawOutlines;
+        }
     }
 
     //setup for rendering pipeline and inputs
-    void OnEnable(){
+    void OnEnable()
+    {
         Debug.Log("Enable");
         RenderPipelineManager.endCameraRendering += RenderPipelineManager_endCameraRendering;
         regenerateGrid.Enable();
         nextGridType.Enable();
         prevGridType.Enable();
         regenerateGrid.Enable();
+        toggleOutlines.Enable();
         // regenerateGrid.started += RegenerateGrid();
     }
 
-    void OnDisable(){
+    void OnDisable()
+    {
         Debug.Log("Disable");
         RenderPipelineManager.endCameraRendering -= RenderPipelineManager_endCameraRendering;
         regenerateGrid.Disable();
         nextGridType.Disable();
         prevGridType.Disable();
+        toggleOutlines.Disable();
         // regenerateGrid.started -= RegenerateGrid();
     }
 
@@ -376,7 +386,7 @@ public class GridScript : MonoBehaviour
             GL.End();
         }
         //draw cell outlines
-        if (drawOutlines = true)
+        if (drawOutlines == true)
         {
             foreach (var cell in cells)
             {

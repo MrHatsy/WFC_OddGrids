@@ -1108,6 +1108,15 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ToggleOutlines"",
+                    ""type"": ""Button"",
+                    ""id"": ""1aebb5ee-e431-4b86-b1f6-64986b8c232a"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -1141,6 +1150,17 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""PrevGridType"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0b50293b-8301-4be0-953b-f601df5e9621"",
+                    ""path"": ""<Keyboard>/o"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ToggleOutlines"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1238,6 +1258,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         m_MapGen_Regenerate = m_MapGen.FindAction("Regenerate", throwIfNotFound: true);
         m_MapGen_NextGridType = m_MapGen.FindAction("NextGridType", throwIfNotFound: true);
         m_MapGen_PrevGridType = m_MapGen.FindAction("PrevGridType", throwIfNotFound: true);
+        m_MapGen_ToggleOutlines = m_MapGen.FindAction("ToggleOutlines", throwIfNotFound: true);
     }
 
     ~@InputActions()
@@ -1702,6 +1723,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_MapGen_Regenerate;
     private readonly InputAction m_MapGen_NextGridType;
     private readonly InputAction m_MapGen_PrevGridType;
+    private readonly InputAction m_MapGen_ToggleOutlines;
     /// <summary>
     /// Provides access to input actions defined in input action map "MapGen".
     /// </summary>
@@ -1725,6 +1747,10 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "MapGen/PrevGridType".
         /// </summary>
         public InputAction @PrevGridType => m_Wrapper.m_MapGen_PrevGridType;
+        /// <summary>
+        /// Provides access to the underlying input action "MapGen/ToggleOutlines".
+        /// </summary>
+        public InputAction @ToggleOutlines => m_Wrapper.m_MapGen_ToggleOutlines;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1760,6 +1786,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @PrevGridType.started += instance.OnPrevGridType;
             @PrevGridType.performed += instance.OnPrevGridType;
             @PrevGridType.canceled += instance.OnPrevGridType;
+            @ToggleOutlines.started += instance.OnToggleOutlines;
+            @ToggleOutlines.performed += instance.OnToggleOutlines;
+            @ToggleOutlines.canceled += instance.OnToggleOutlines;
         }
 
         /// <summary>
@@ -1780,6 +1809,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @PrevGridType.started -= instance.OnPrevGridType;
             @PrevGridType.performed -= instance.OnPrevGridType;
             @PrevGridType.canceled -= instance.OnPrevGridType;
+            @ToggleOutlines.started -= instance.OnToggleOutlines;
+            @ToggleOutlines.performed -= instance.OnToggleOutlines;
+            @ToggleOutlines.canceled -= instance.OnToggleOutlines;
         }
 
         /// <summary>
@@ -2055,5 +2087,12 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnPrevGridType(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "ToggleOutlines" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnToggleOutlines(InputAction.CallbackContext context);
     }
 }

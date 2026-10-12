@@ -1022,6 +1022,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "ToggleOutlines",
+                    "type": "Button",
+                    "id": "1aebb5ee-e431-4b86-b1f6-64986b8c232a",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -1055,6 +1064,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "PrevGridType",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0b50293b-8301-4be0-953b-f601df5e9621",
+                    "path": "<Keyboard>/o",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ToggleOutlines",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -92,6 +92,8 @@ public class Tile
         //First, check if i fit my neighbours max relations
         //for each type i could have as a n, count all my ns, if i have the max then remove this
         int countOfThisType;
+        int max;
+        int min;
         for (int i = 0; i < TileNeighbourIndex.AmountOfTileTypes; i++)
         {
             countOfThisType = 0;
@@ -102,7 +104,15 @@ public class Tile
                     countOfThisType++;
                 }
             }
-            if (countOfThisType > TileNeighbourIndex.TileNMMax(typeID, i))
+
+            //we use -x when the limit is neighbourcount-x, as the neighbourcount is inconsisten
+            max = TileNeighbourIndex.TileNMMax(typeID, i);
+            if (max < 0)
+            {
+                max = neighbours.Count - max;
+            }
+
+            if (countOfThisType > max)
             {
                 //too many neighbours to be of this type! we cant be this!
                 Debug.Log("return false from max!! " + "type: " + typeID + " neigh: " + i);
@@ -122,7 +132,16 @@ public class Tile
                     countOfThisType++;
                 }
             }
-            if (countOfThisType < TileNeighbourIndex.TileNMMin(typeID, i))
+
+            //we use -x when the limit is neighbourcount-x, as the neighbourcount is inconsisten
+            min = TileNeighbourIndex.TileNMMin(typeID, i);
+            if (min < 0)
+            {
+                min = neighbours.Count - min;
+            }
+
+
+            if (countOfThisType < min)
             {
                 // Debug.Log("return false from MIN?? "  + "type: " + typeID + " neigh: " + i);
                 // Debug.Log("Count: "  + countOfThisType + " neigh: " + i);
