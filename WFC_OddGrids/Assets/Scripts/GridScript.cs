@@ -44,6 +44,7 @@ public class GridScript : MonoBehaviour
     private IGrid grid;
     private VoronoiGridOptions voronoiGridOptions = new VoronoiGridOptions();
     private List<Vector2> voroPointList = new List<Vector2>();
+    private bool stillGenerating = false;
     
 
     private Dictionary<Cell, Tile> tileList = new Dictionary<Cell, Tile>();
@@ -68,7 +69,11 @@ public class GridScript : MonoBehaviour
         //Input detections
         DetectInputs();
 
-        WaveFunctionCollapse();
+        if (stillGenerating)
+        {
+        WaveFunctionCollapse();    
+        }
+        
     }
 
     void CreateGrid()
@@ -80,6 +85,7 @@ public class GridScript : MonoBehaviour
                     new Vector3Int(boundSize,boundSize,boundSize));
         if(gridTypeID >= noOfGrids) gridTypeID = 0;
         if(gridTypeID < 0) gridTypeID = noOfGrids-1;
+        stillGenerating = true;
 
         switch (gridTypeID)
         {
@@ -188,8 +194,9 @@ public class GridScript : MonoBehaviour
         Tile minEntrTile = FindLowestEntropy();
         if (minEntrTile == null)
         {
-            //TODO TODO all tiles are collapsed, we are ready to end generation
-            Debug.Log("Ready to end generation");
+            //all tiles are null, stop generation
+            stillGenerating = false;
+            Debug.Log("All Collapsed!");
         }
         else
         {
@@ -226,15 +233,14 @@ public class GridScript : MonoBehaviour
                 minEntropyTileList.Add(tileList[c]);
             }
         }
-        int randomItem = UnityEngine.Random.Range(0, minEntropyTileList.Count);
-        // Debug.Log("Random item: " + randomItem + " List size: " + minEntropyTileList.Count);
-        
-        minEntropyTile = minEntropyTileList[randomItem];
         if(minEntropy == 100)
         {
             //all tiles are collapsed
             return null;    
         }
+        
+        int randomItem = UnityEngine.Random.Range(0, minEntropyTileList.Count);
+        minEntropyTile = minEntropyTileList[randomItem];
         return minEntropyTile;
         
     }

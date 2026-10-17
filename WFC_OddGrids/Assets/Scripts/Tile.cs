@@ -57,10 +57,14 @@ public class Tile
 
     public void Propogate()
     {
-        //for each neighbour
+        //for each neighbour (thats not already collapsed)
         foreach (Tile n in neighbours)
         {
-            n.PropogateForNeighbours();
+            if(n.MyEntropy > 1)
+            {
+                n.PropogateForNeighbours();    
+            }
+            
         }
     }
 
@@ -161,22 +165,38 @@ public class Tile
 
     public void Collapse()
     {
-        List<int> possibilities = new List<int>();
+        if( type != 0)
+        {
+            entropy = 1;
+            return;
+        }
+        //get total possible weights
+        int totalWeight = 0;
         for (int i = 2; i < potentialType.Length; i++)
         {
             if (potentialType[i])
             {
                 //this is a possibility   
-                possibilities.Add(i);
+                totalWeight += TileNeighbourIndex.TileNWeight(i);
+            }
+        }
+        //get random from 0 to total weight
+        int randomBasedOnWeight = Random.Range(0, totalWeight);
+        //subtract weights until random < 0;
+        for (int i = 2; i < potentialType.Length && randomBasedOnWeight >= 0; i++)
+        {
+            if (potentialType[i])
+            {
+                randomBasedOnWeight -= TileNeighbourIndex.TileNWeight(i);
+                type = i;
                 potentialType[i] = false;
             }
         }
+
         // Debug.Log("possibilites count: " + possibilities.Count );
-        type = possibilities[
-            Random.Range(0, possibilities.Count)
-            ];
+        
         potentialType[type] = true;
-        UpdateEntropy();
+        entropy = 1;
         color = TileNeighbourIndex.TileNColor(type);
     }
 
