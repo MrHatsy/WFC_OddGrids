@@ -10,6 +10,7 @@ public class Tile
     private int type = 0; //0 = undecided
     private bool[] potentialType;
     private int entropy;
+    private int entropyWeight;
     private List<Tile> neighbours = new List<Tile>();
     private List<Tile> doubleNeighbours;
     private Color color = Color.white;
@@ -28,9 +29,9 @@ public class Tile
     {
         get { return entropy; }
     }
-    public List<Tile> Neighbours
+    public int MyEntropyWeight
     {
-        get{ return neighbours; }
+        get { return entropy; }
     }
     public bool[] PotentialType
     {
@@ -54,6 +55,12 @@ public class Tile
         UpdateEntropy();
 
     }
+
+    public void AddNeighbour(Tile newNeighbour)
+    {
+        neighbours.Add(newNeighbour);
+    }
+
 
     public void Propogate()
     {
@@ -157,19 +164,13 @@ public class Tile
         return true;
     }
 
-
-    public void AddNeighbour(Tile newNeighbour)
-    {
-        neighbours.Add(newNeighbour);
-    }
-
     public void Collapse()
     {
-        if( type != 0)
-        {
-            entropy = 1;
-            return;
-        }
+        // if( type != 0)
+        // {
+        //     entropy = 1;
+        //     return;
+        // }
         //get total possible weights
         int totalWeight = 0;
         for (int i = 2; i < potentialType.Length; i++)
@@ -203,11 +204,13 @@ public class Tile
     private void UpdateEntropy()
     {
         entropy = 0;
+        entropyWeight = 0;
         for( int i = 0; i < potentialType.Length ; i++)
         {
             if(potentialType[i])
             {
                 entropy++;
+                entropyWeight += TileNeighbourIndex.TileNWeight(i);
             }
         }
     }
