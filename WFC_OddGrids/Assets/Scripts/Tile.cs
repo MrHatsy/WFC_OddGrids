@@ -169,7 +169,11 @@ public class Tile
     void CheckMins()
     {
         List<int> unmetMins = new List<int>();
-        bool[] potentialTypeTemp = potentialType;
+        bool[] potentialTypeTemp = new bool[potentialType.Length];
+        for(int i = 0 ; i < potentialTypeTemp.Length ; i++)
+        {
+            potentialTypeTemp[i] = potentialType[i];
+        }
 
         int countOfThisType;
         int min;
@@ -200,10 +204,10 @@ public class Tile
                     }
 
                     //if mins not good, keep this type
-                    if (countOfThisType < min)
-                    {
-                        unmetMins.Add(i);
-                    }
+                    // if (countOfThisType < min)
+                    // {
+                    //     unmetMins.Add(i);
+                    // }
                 }
             }
         }
@@ -230,8 +234,7 @@ public class Tile
                 potentialType = potentialTypeTemp;
                 return;
             }
-        }    
-            
+        }                
     }
 
     public void Collapse()
