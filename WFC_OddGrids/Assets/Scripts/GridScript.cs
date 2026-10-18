@@ -69,7 +69,7 @@ public class GridScript : MonoBehaviour
         //Input detections
         DetectInputs();
 
-        while (stillGenerating)
+        if (stillGenerating)
         {
         WaveFunctionCollapse();    
         }
@@ -190,13 +190,17 @@ public class GridScript : MonoBehaviour
 
     void WFCObserve()
     {
-        Debug.Log("Observing...");
+        // Debug.Log("Observing...");
         Tile minEntrTile = FindLowestEntropyWeight();
         if (minEntrTile == null)
         {
-            //all tiles are null, stop generation
-            stillGenerating = false;
-            Debug.Log("All Collapsed!");
+            //we are done
+            if( stillGenerating)
+            {
+                //an error tile has been found, stop generationg
+                stillGenerating = false;
+                // CreateGrid();
+            }
         }
         else
         {
@@ -257,7 +261,9 @@ Tile FindLowestEntropyWeight()
             if (myEntropyW == 0)
             {
                 // TODO: ERROE
+                Debug.Log("ERROR ERROR ERROE this grid is invalid as this tile cannot collapse");
                 //ERROR ERROR ERROE this grid is invalid as this tile cannot collapse
+                return null;
             }
             else if (myEntropyW < minEntropyW && tileList[c].MyEntropy > 1)
             {
@@ -275,6 +281,8 @@ Tile FindLowestEntropyWeight()
         if(minEntropyW == Int32.MaxValue)
         {
             //all tiles are collapsed
+            stillGenerating = false;
+            Debug.Log("All Collapsed!");
             return null;    
         }
         
@@ -284,7 +292,7 @@ Tile FindLowestEntropyWeight()
     }
     void WFCPropogate()
     {
-        Debug.Log("Propogating...");
+        // Debug.Log("Propogating...");
         bool keepPropogating = true;
         while (keepPropogating )
         {

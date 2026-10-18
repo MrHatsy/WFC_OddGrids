@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Timers;
+using Mono.Cecil;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -164,6 +166,74 @@ public class Tile
         return true;
     }
 
+    void CheckMins()
+    {
+        List<int> unmetMins = new List<int>();
+        bool[] potentialTypeTemp = potentialType;
+
+        int countOfThisType;
+        int min;
+
+        //for each neighbour
+        foreach( Tile n in neighbours)
+        {
+            //check if n is collapsed
+            if(n.MyType != 0)
+            {
+                //check if my mins are good
+                //for each type
+                for (int i = 0; i < TileNeighbourIndex.AmountOfTileTypes; i++)
+                {
+                    countOfThisType = 0;
+                    foreach (Tile nn in n.neighbours)
+                    {
+                        if (nn.MyType == i)
+                        {
+                            countOfThisType++;
+                        }
+                    }
+                    //we use -x when the limit is neighbourcount-x, as the neighbourcount is inconsisten
+                    min = TileNeighbourIndex.TileNMMin(n.MyType, i);
+                    if (min < 0)
+                    {
+                        min = n.neighbours.Count - min;
+                    }
+
+                    //if mins not good, keep this type
+                    if (countOfThisType < min)
+                    {
+                        unmetMins.Add(i);
+                    }
+                }
+            }
+        }
+        
+        //if no unmet mins, we're good to go, else,
+        if(unmetMins.Count != 0)
+        {
+            //keep only types that are kept AND that are potententially us
+            //since they're already true, we NAND to find the falses
+            for( int i = 0 ; i < potentialType.Length ; i++)
+            {
+                if( !unmetMins.Contains(i) )
+                {
+                    potentialTypeTemp[i] = false;
+                }
+            } 
+        }
+
+        // if the new list is Empty, dont use it
+        for( int i = 0 ; i < potentialType.Length ; i++)
+        {
+            if (potentialTypeTemp[i])
+            {
+                potentialType = potentialTypeTemp;
+                return;
+            }
+        }    
+            
+    }
+
     public void Collapse()
     {
         // if( type != 0)
@@ -172,6 +242,10 @@ public class Tile
         //     return;
         // }
         //get total possible weights
+
+        //make sure we dont contradict our neighbours minimums
+        CheckMins();
+
         int totalWeight = 0;
         for (int i = 2; i < potentialType.Length; i++)
         {
