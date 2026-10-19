@@ -278,13 +278,27 @@ public class Tile
         color = TileNeighbourIndex.TileNColor(type);
     }
 
+    public void CollapseToID(int typeID)
+    {
+
+        int totalWeight = 0;
+        for (int i = 0; i < potentialType.Length; i++)
+        {
+            potentialType[i] = false;
+        }
+
+        type = typeID;
+        potentialType[type] = true;
+        entropy = 1;
+        color = TileNeighbourIndex.TileNColor(type);
+    }
     private void UpdateEntropy()
     {
         entropy = 0;
         entropyWeight = 0;
-        for( int i = 0; i < potentialType.Length ; i++)
+        for (int i = 0; i < potentialType.Length; i++)
         {
-            if(potentialType[i])
+            if (potentialType[i])
             {
                 entropy++;
                 entropyWeight += TileNeighbourIndex.TileNWeight(i);
