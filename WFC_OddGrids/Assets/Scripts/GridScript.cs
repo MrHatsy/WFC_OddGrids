@@ -280,25 +280,32 @@ public class GridScript : MonoBehaviour
     void FinishGeneration()
     {
         stillGenerating = false;
-        // Debug.Log("All Collapsed! doing final checks");
-        // int[] tileTypeCounts = new int[tileNeighbourIndex.AmountOfTileTypes];
-        // foreach (int i in tileTypeCounts)
-        // {
-        //     i = 0;
-        // }
-        // //get counts of each tile type
-        // foreach (Cell c in grid.GetCells())
-        // {
-        //     tileTypeCounts[tileList[c].MyType]++;
-        // }
-        // //check if count < minimum, if we dont have enough, we regen
-        // foreach (int i in tileTypeCounts)
-        // {
-        //     if (i < LLLLLLLLLLLLLLLLLLLLLLLLLLL)
-        //     {
+        Debug.Log("All Collapsed! doing final checks");
+        int[] tileTypeCounts = new int[TileNeighbourIndex.AmountOfTileTypes];
+        for( int i = 0 ; i < tileTypeCounts.Length ; i++ )
+        {
+            tileTypeCounts[i] = 0;
+        }
+        //get counts of each tile type
+        foreach (Cell c in grid.GetCells())
+        {
+            tileTypeCounts[tileList[c].MyType]++;
+        }
+        //check if count < minimum, if we dont have enough, we regen
+        for( int i = 0 ; i < tileTypeCounts.Length ; i++ )
+        {
+            if (tileTypeCounts[i] < TileNeighbourIndex.TileMinCount(i))
+            {
+                //regenerate this graph
+                Debug.Log("Generation does not meet constraints... redoing.");
+                stillGenerating = true;
+            }
+        }
 
-        //     }
-        // }
+        if (!stillGenerating)
+        {
+            Debug.Log("Generation is good!");
+        }
 
     }
     void WFCPropogate()

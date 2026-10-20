@@ -128,7 +128,6 @@ public class Tile
             if (countOfThisType > max)
             {
                 //too many neighbours to be of this type! we cant be this!
-                Debug.Log("return false from max!! " + "type: " + typeID + " neigh: " + i);
                 return false;
             }
         }
@@ -156,8 +155,6 @@ public class Tile
 
             if (countOfThisType < min)
             {
-                // Debug.Log("return false from MIN?? "  + "type: " + typeID + " neigh: " + i);
-                // Debug.Log("Count: "  + countOfThisType + " neigh: " + i);
                 //not enough neighbours to be of this type! we cant be this!                
                 return false;
             }

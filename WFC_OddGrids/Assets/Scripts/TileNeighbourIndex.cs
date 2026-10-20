@@ -25,6 +25,10 @@ public class TileNeighbourIndex
     {
         return tileColorIndex[n];
     }
+    public static int TileMinCount( int n)
+    {
+        return tileMinCountIndex[n];
+    }
     public static int TileNMMin(int n, int m)
     {
         return tileNeighbourMinIndex[n,m];
@@ -55,6 +59,7 @@ public class TileNeighbourIndex
         //set up arrays based on amount of tiles
 
         tileWeightIndex = new int[amountOfTileTypes];
+        tileMinCountIndex = new int[amountOfTileTypes];
         tileColorIndex = new Color[amountOfTileTypes];
         tileNeighbourMinIndex = new int[amountOfTileTypes, amountOfTileTypes];
         tileNeighbourMaxIndex = new int[amountOfTileTypes, amountOfTileTypes];
@@ -67,7 +72,7 @@ public class TileNeighbourIndex
         {
             splitLine = line.Split(',');
             tileWeightIndex[lineNum] = Int32.Parse(splitLine[2]);
-            // tileMinCountIndex[lineNum] = Int32.Parse(splitLine[6]);
+            tileMinCountIndex[lineNum] = Int32.Parse(splitLine[6]);
             tileColorIndex[lineNum] = new Color(
                 Single.Parse(splitLine[3]),
                 Single.Parse(splitLine[4]),
