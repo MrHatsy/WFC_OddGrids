@@ -31,6 +31,7 @@ public class GridScript : MonoBehaviour
     private InputAction nextGridType;
     private InputAction prevGridType;
     private InputAction toggleOutlines;
+    private InputAction toggleTimelapse;
     
 
     //constants
@@ -39,6 +40,7 @@ public class GridScript : MonoBehaviour
     private static Material myMaterial;
     public TileNeighbourIndex tileNeighbourIndex;
     private bool drawOutlines = false;
+    private bool doTimelapse = false;
     [SerializeField] private GameObject flowerSprite;
     [SerializeField] private GameObject treeSprite;
     [SerializeField] private GameObject houseSprite;
@@ -63,6 +65,7 @@ public class GridScript : MonoBehaviour
         nextGridType = inputs.MapGen.NextGridType;
         prevGridType = inputs.MapGen.PrevGridType;
         toggleOutlines = inputs.MapGen.ToggleOutlines;
+        toggleTimelapse = inputs.MapGen.ToggleTimelapse;
         tileNeighbourIndex = new TileNeighbourIndex();
         
         // myCamera = FindAnyObjectByType<Camera>();
@@ -75,11 +78,21 @@ public class GridScript : MonoBehaviour
         DetectInputs();
 
         //if - generate tile by tile // while - generate in one frame
-        if (stillGenerating)
+        if (doTimelapse)
         {
-            WaveFunctionCollapse();
+            if (stillGenerating)
+            {
+                WaveFunctionCollapse();
+            }    
         }
-        
+        else
+        {
+            while (stillGenerating)
+            {
+                WaveFunctionCollapse();
+            }
+        }
+ 
     }
 
     void CreateGrid()
@@ -455,6 +468,10 @@ public class GridScript : MonoBehaviour
         {
             drawOutlines = !drawOutlines;
         }
+        if (toggleTimelapse.triggered)
+        {
+            doTimelapse = !doTimelapse;
+        }
     }
 
     //setup for rendering pipeline and inputs
@@ -467,6 +484,7 @@ public class GridScript : MonoBehaviour
         prevGridType.Enable();
         regenerateGrid.Enable();
         toggleOutlines.Enable();
+        toggleTimelapse.Enable();
         // regenerateGrid.started += RegenerateGrid();
     }
 
@@ -478,6 +496,7 @@ public class GridScript : MonoBehaviour
         nextGridType.Disable();
         prevGridType.Disable();
         toggleOutlines.Disable();
+        toggleTimelapse.Disable();
         // regenerateGrid.started -= RegenerateGrid();
     }
 

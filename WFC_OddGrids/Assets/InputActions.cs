@@ -1117,6 +1117,15 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ToggleTimelapse"",
+                    ""type"": ""Button"",
+                    ""id"": ""f1b56555-9ed0-4cba-90af-1ad0a813c8bb"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -1161,6 +1170,17 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""ToggleOutlines"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6066faf3-7dcb-4363-bb1e-495d7898614a"",
+                    ""path"": ""<Keyboard>/t"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ToggleTimelapse"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1259,6 +1279,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         m_MapGen_NextGridType = m_MapGen.FindAction("NextGridType", throwIfNotFound: true);
         m_MapGen_PrevGridType = m_MapGen.FindAction("PrevGridType", throwIfNotFound: true);
         m_MapGen_ToggleOutlines = m_MapGen.FindAction("ToggleOutlines", throwIfNotFound: true);
+        m_MapGen_ToggleTimelapse = m_MapGen.FindAction("ToggleTimelapse", throwIfNotFound: true);
     }
 
     ~@InputActions()
@@ -1724,6 +1745,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_MapGen_NextGridType;
     private readonly InputAction m_MapGen_PrevGridType;
     private readonly InputAction m_MapGen_ToggleOutlines;
+    private readonly InputAction m_MapGen_ToggleTimelapse;
     /// <summary>
     /// Provides access to input actions defined in input action map "MapGen".
     /// </summary>
@@ -1751,6 +1773,10 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "MapGen/ToggleOutlines".
         /// </summary>
         public InputAction @ToggleOutlines => m_Wrapper.m_MapGen_ToggleOutlines;
+        /// <summary>
+        /// Provides access to the underlying input action "MapGen/ToggleTimelapse".
+        /// </summary>
+        public InputAction @ToggleTimelapse => m_Wrapper.m_MapGen_ToggleTimelapse;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1789,6 +1815,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @ToggleOutlines.started += instance.OnToggleOutlines;
             @ToggleOutlines.performed += instance.OnToggleOutlines;
             @ToggleOutlines.canceled += instance.OnToggleOutlines;
+            @ToggleTimelapse.started += instance.OnToggleTimelapse;
+            @ToggleTimelapse.performed += instance.OnToggleTimelapse;
+            @ToggleTimelapse.canceled += instance.OnToggleTimelapse;
         }
 
         /// <summary>
@@ -1812,6 +1841,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @ToggleOutlines.started -= instance.OnToggleOutlines;
             @ToggleOutlines.performed -= instance.OnToggleOutlines;
             @ToggleOutlines.canceled -= instance.OnToggleOutlines;
+            @ToggleTimelapse.started -= instance.OnToggleTimelapse;
+            @ToggleTimelapse.performed -= instance.OnToggleTimelapse;
+            @ToggleTimelapse.canceled -= instance.OnToggleTimelapse;
         }
 
         /// <summary>
@@ -2094,5 +2126,12 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnToggleOutlines(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "ToggleTimelapse" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnToggleTimelapse(InputAction.CallbackContext context);
     }
 }
