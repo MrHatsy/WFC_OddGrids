@@ -11,6 +11,7 @@ using UnityEditor.ShaderGraph.Internal;
 using Unity.VisualScripting;
 // using System.Numerics;
 // using System.Numerics;
+// using System.Numerics;
 // using System.Drawing;
 // using System.Diagnostics;
 
@@ -34,10 +35,14 @@ public class GridScript : MonoBehaviour
 
     //constants
     private int noOfGrids = 6;
-    private Camera myCamera;
+    [SerializeField] private Camera myCamera;
     private static Material myMaterial;
     public TileNeighbourIndex tileNeighbourIndex;
-    private bool drawOutlines = true;
+    private bool drawOutlines = false;
+    [SerializeField] private GameObject flowerSprite;
+    [SerializeField] private GameObject treeSprite;
+    [SerializeField] private GameObject houseSprite;
+    [SerializeField] private GameObject templeSprite;
 
     //variables
     private int gridTypeID = 0; // 0 = voronoi, 1= perturbed hex grid
@@ -60,7 +65,7 @@ public class GridScript : MonoBehaviour
         toggleOutlines = inputs.MapGen.ToggleOutlines;
         tileNeighbourIndex = new TileNeighbourIndex();
         
-        myCamera = FindAnyObjectByType<Camera>();
+        // myCamera = FindAnyObjectByType<Camera>();
         CreateGrid();
     }
 
@@ -178,10 +183,11 @@ public class GridScript : MonoBehaviour
             }
         }
 
-        GenerateNeeeded();
+        DestroyChildren();
+        GenerateNeeded();
     }
 
-    void GenerateNeeeded()
+    void GenerateNeeded()
     {
         //force a beach to spawn
         GetRandomTile().CollapseToID(3);
@@ -353,8 +359,49 @@ public class GridScript : MonoBehaviour
         if (!stillGenerating)
         {
             Debug.Log("Generation is good!");
+            SpawnSprites();
         }
+    }
 
+    //TODO this whole method is rubbish, rework if we're releasing this
+    void SpawnSprites()
+    {
+        foreach (Cell c in grid.GetCells())
+        {
+            int type = tileList[c].MyType;
+            UnityEngine.Vector3 position = grid.GetCellCenter(c);
+            switch (type)
+            {
+                case 6: //flower
+                    Instantiate(flowerSprite, 
+                    position + new UnityEngine.Vector3(0,15,0), 
+                    Quaternion.identity, this.transform);
+                    break;
+                case 7: //tree
+                    Instantiate(treeSprite, 
+                    position + new UnityEngine.Vector3(0,15,0), 
+                    Quaternion.identity, this.transform);
+                    break;
+                case 8: //building
+                    Instantiate(houseSprite, 
+                    position + new UnityEngine.Vector3(0,15,0), 
+                    Quaternion.identity, this.transform);
+                    break;
+                case 9: //temple
+                    Instantiate(templeSprite, 
+                    position + new UnityEngine.Vector3(0,15,0), 
+                    Quaternion.identity, this.transform);
+                    break;
+            }
+        }
+    }
+
+    void DestroyChildren()
+    {
+        for(int i = 0 ; i < transform.childCount ; i++)
+        {
+            Destroy(transform.GetChild(i).gameObject);
+        }
     }
     void WFCPropogate()
     {
@@ -437,6 +484,7 @@ public class GridScript : MonoBehaviour
     private void RenderPipelineManager_endCameraRendering(ScriptableRenderContext context, Camera myCamera)
     {
         DrawGrid();
+        // DrawSprites();
     }
 
     private void CreateMyMaterial()
@@ -527,7 +575,13 @@ public class GridScript : MonoBehaviour
             }
         }
         
-        GL.PopMatrix();
+        GL.PopMatrix();        
     }
-    //////
+
+    // void DrawSprites()
+    // {
+    //     Rect mrRect = new Rect(0f, 0f, 12.8f, 12.8f);
+    //     Texture mrText = ;
+    //     Graphics.DrawTexture(mrRect, );
+    // }
 }
