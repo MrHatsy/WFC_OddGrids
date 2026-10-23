@@ -183,11 +183,19 @@ public class GridScript : MonoBehaviour
 
     void GenerateNeeeded()
     {
-        //force a ocean to spawn
-        GetRandomTile().CollapseToID(2);
+        //force a beach to spawn
+        GetRandomTile().CollapseToID(3);
+        GetRandomTile().CollapseToID(3);
+        GetRandomTile().CollapseToID(3);
 
-        //force a grass to spawn
+        //force 2 grass to spawn
         GetRandomTile().CollapseToID(5);
+        GetRandomTile().CollapseToID(5);
+        GetRandomTile().CollapseToID(5);
+
+        //force a house to spawn
+        GetRandomTile().CollapseToID(8);
+
     }
     private Tile GetRandomTile()
     {
@@ -217,7 +225,7 @@ public class GridScript : MonoBehaviour
     void WFCObserve()
     {
         // Debug.Log("Observing...");
-        Tile minEntrTile = FindLowestEntropyWeight();
+        Tile minEntrTile = FindLowestEntropy();
         if (minEntrTile == null)
         {
             //we are done
@@ -236,37 +244,36 @@ public class GridScript : MonoBehaviour
         }
     }
 
-    private Tile FindLowestEntropyWeight()
+    private Tile FindLowestEntropy()
     {
-        //use the sum of weight rather than just the entropy
         //if entropy == 1, tile is collapsed, if e > 1, tile not collapsed
-        int minEntropyW = Int32.MaxValue;
+        int minEntropy = Int32.MaxValue;
         List<Tile> minEntropyTileList = new List<Tile>();
         Tile minEntropyTile;
         foreach( Cell c in grid.GetCells() )
         {
-            int myEntropyW = tileList[c].MyEntropyWeight;
-            if (myEntropyW == 0)
+            int myEntropy = tileList[c].MyEntropy;
+            if (myEntropy == 0)
             {
                 // TODO: ERROE
                 Debug.Log("ERROR ERROR ERROE this grid is invalid as this tile cannot collapse");
                 //ERROR ERROR ERROE this grid is invalid as this tile cannot collapse
                 return null;
             }
-            else if (myEntropyW < minEntropyW && tileList[c].MyEntropy > 1)
+            else if (myEntropy < minEntropy && tileList[c].MyEntropy > 1)
             {
-                minEntropyW = myEntropyW;
+                minEntropy = myEntropy;
                 minEntropyTileList.Clear();
                 minEntropyTileList.Add(tileList[c]);
             }
-            else if (myEntropyW == minEntropyW)
+            else if (myEntropy == minEntropy)
             {
                 //make a list of all the tiles with min entropy so we can pick
                 //a random tile if there are multiple
                 minEntropyTileList.Add(tileList[c]);
             }
         }
-        if(minEntropyW == Int32.MaxValue)
+        if(minEntropy == Int32.MaxValue)
         {
             //all tiles are collapsed
             FinishGeneration();
@@ -277,6 +284,47 @@ public class GridScript : MonoBehaviour
         minEntropyTile = minEntropyTileList[randomItem];
         return minEntropyTile;
     }
+    // private Tile FindLowestEntropyW()
+    // {
+    //     //if entropy == 1, tile is collapsed, if e > 1, tile not collapsed
+    //     int minEntropyW = Int32.MaxValue;
+    //     List<Tile> minEntropyTileList = new List<Tile>();
+    //     Tile minEntropyTile;
+    //     foreach( Cell c in grid.GetCells() )
+    //     {
+    //         int myEntropyW = tileList[c].MyEntropyWeight;
+    //         if (myEntropyW == 0)
+    //         {
+    //             // TODO: ERROE
+    //             Debug.Log("ERROR ERROR ERROE this grid is invalid as this tile cannot collapse");
+    //             //ERROR ERROR ERROE this grid is invalid as this tile cannot collapse
+    //             return null;
+    //         }
+    //         else if (myEntropyW < minEntropyW && tileList[c].MyEntropy > 1)
+    //         {
+    //             minEntropy = myEntropy;
+    //             minEntropyTileList.Clear();
+    //             minEntropyTileList.Add(tileList[c]);
+    //         }
+    //         else if (myEntropy == minEntropy)
+    //         {
+    //             //make a list of all the tiles with min entropy so we can pick
+    //             //a random tile if there are multiple
+    //             minEntropyTileList.Add(tileList[c]);
+    //         }
+    //     }
+    //     if(minEntropy == Int32.MaxValue)
+    //     {
+    //         //all tiles are collapsed
+    //         FinishGeneration();
+    //         return null;   
+    //     }
+        
+    //     int randomItem = UnityEngine.Random.Range(0, minEntropyTileList.Count);
+    //     minEntropyTile = minEntropyTileList[randomItem];
+    //     return minEntropyTile;
+    // }
+
     void FinishGeneration()
     {
         stillGenerating = false;
