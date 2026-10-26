@@ -202,15 +202,16 @@ public class GridScript : MonoBehaviour
 
     void GenerateNeeded()
     {
-        //force a beach to spawn
-        GetRandomTile().CollapseToID(3);
-        GetRandomTile().CollapseToID(3);
-        GetRandomTile().CollapseToID(3);
+        //force a ocean to spawn
+       
+        GetRandomTile().CollapseToID(2);
+        GetRandomTile().CollapseToID(2);
+
+        // //force a beach to spawn
+        // GetRandomTile().CollapseToID(3);
 
         //force 2 grass to spawn
-        GetRandomTile().CollapseToID(5);
-        GetRandomTile().CollapseToID(5);
-        GetRandomTile().CollapseToID(5);
+        GetRandomTile().CollapseToID(7);
 
         //force a house to spawn
         GetRandomTile().CollapseToID(8);

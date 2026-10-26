@@ -1,0 +1,42 @@
+--1 - Default
+3 land
+3 beaches 
+1 house
+10 ocean weight
+250 grass
+120 tree
+
+--2 - lakes
+2 ocean
+2 land
+1 beach
+1 house
+30 ocean weight
+200 grass
+100 tree
+
+--3 Forest
+1 ocean
+1 beach
+2 trees
+1 temple
+200 tree
+200 grass
+50 ocean
+Ocean can touch Grass/Trees
+
+--4 Village
+1 ocean
+1 beach
+2 trees
+1 temple
+50 house
+5 temple
+50 tree
+150 grass
+Trees cant touch house
+Trees have min 3 trees
+
+--5 Islands
+4 ocean
+1 house
