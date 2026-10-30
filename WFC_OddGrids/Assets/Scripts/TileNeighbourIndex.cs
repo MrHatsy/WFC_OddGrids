@@ -8,6 +8,7 @@ public class TileNeighbourIndex
     private static int amountOfTileTypes;
     private static int[] tileWeightIndex;
     private static int[] tileMinCountIndex;
+    private static int[] tileStartIndex;
     private static Color[] tileColorIndex;
     private static int[,] tileNeighbourMinIndex;
     private static int[,] tileNeighbourMaxIndex;
@@ -28,6 +29,10 @@ public class TileNeighbourIndex
     public static int TileMinCount( int n)
     {
         return tileMinCountIndex[n];
+    }
+    public static int TileStartIndex( int n )
+    {
+        return tileStartIndex[n];
     }
     public static int TileNMMin(int n, int m)
     {
@@ -60,11 +65,12 @@ public class TileNeighbourIndex
 
         tileWeightIndex = new int[amountOfTileTypes];
         tileMinCountIndex = new int[amountOfTileTypes];
+        tileStartIndex = new int[amountOfTileTypes];
         tileColorIndex = new Color[amountOfTileTypes];
         tileNeighbourMinIndex = new int[amountOfTileTypes, amountOfTileTypes];
         tileNeighbourMaxIndex = new int[amountOfTileTypes, amountOfTileTypes];
 
-        //fill in color index, weight index, and mincount index
+        //fill in color index, weight index, mincount, and tilestart index
         lineNum = 0;
         reader = new StreamReader("./Assets/Data/tileTypeIndex.csv");
         line = reader.ReadLine();
@@ -73,6 +79,7 @@ public class TileNeighbourIndex
             splitLine = line.Split(',');
             tileWeightIndex[lineNum] = Int32.Parse(splitLine[2]);
             tileMinCountIndex[lineNum] = Int32.Parse(splitLine[6]);
+            tileStartIndex[lineNum] = Int32.Parse(splitLine[7]);
             tileColorIndex[lineNum] = new Color(
                 Single.Parse(splitLine[3]),
                 Single.Parse(splitLine[4]),

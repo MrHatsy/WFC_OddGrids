@@ -5,15 +5,6 @@ using System;
 using System.Linq;
 using UnityEngine.Rendering;
 using UnityEngine.InputSystem;
-using System.Dynamic;
-using System.IO;
-using UnityEditor.ShaderGraph.Internal;
-using Unity.VisualScripting;
-// using System.Numerics;
-// using System.Numerics;
-// using System.Numerics;
-// using System.Drawing;
-// using System.Diagnostics;
 
 public class GridScript : MonoBehaviour
 {
@@ -202,19 +193,16 @@ public class GridScript : MonoBehaviour
 
     void GenerateNeeded()
     {
-        //force a ocean to spawn
+        //generate starting tiles
        
-        GetRandomTile().CollapseToID(2);
-        GetRandomTile().CollapseToID(2);
+        for(int i = 0; i < TileNeighbourIndex.AmountOfTileTypes ; i++)
+        {
+            for(int j = 0 ; j < TileNeighbourIndex.TileStartIndex(i) ; j++)
+            {
+                GetRandomTile().CollapseToID(j);
+            }
+        }
 
-        // //force a beach to spawn
-        // GetRandomTile().CollapseToID(3);
-
-        //force 2 grass to spawn
-        GetRandomTile().CollapseToID(7);
-
-        //force a house to spawn
-        GetRandomTile().CollapseToID(8);
 
     }
     private Tile GetRandomTile()
