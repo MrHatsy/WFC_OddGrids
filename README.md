@@ -4,10 +4,10 @@ A unity project that runs to generate a map of a level on various types of grids
 
 ## Grid types include: 
     
-- **Voronoi Grids**, a type of grid generated from a set of randomly placed nodes. The cells are formed in such a way that any given point on the grid is located within the cell corresponding to its nearest node. The resulting graph is made up of convex polygons of all different shapes and sizes. We have smoothed the random placement of points out to make the cells evener in size. 
-- **Townscaper Grids**, a type of grid formed from merging and subdividing triangles into quads, then smoothing them out, resulting in a graph that's made of quads of varying shapes that are nearly even in size and shape to their neighbours. 
-- **Perturbed Hex Grids**, hex grids that have had their corners randomly moved to make them appear to be randomly shaped, while still keeping all the order that regular hex grids have 
-- **Regular Grids**, the project also includes square, hex, and tri grids. 
+- **Voronoi Grids**: a type of grid generated from a set of randomly placed nodes. The cells are formed in such a way that any given point on the grid is located within the cell corresponding to its nearest node. The resulting graph is made up of convex polygons of all different shapes and sizes. We have smoothed the random placement of points out to make the cells evener in size. 
+- **Townscaper Grids**: a type of grid formed from merging and subdividing triangles into quads, then smoothing them out, resulting in a graph that's made of quads of varying shapes that are nearly even in size and shape to their neighbours. 
+- **Perturbed Hex Grids**: hex grids that have had their corners randomly moved to make them appear to be randomly shaped, while still keeping all the order that regular hex grids have 
+- **Regular Grids**: the project also includes **Square**, **Hex**, and **Tri** grids. 
 
 ## Controls
 | Input | Effect |
@@ -23,7 +23,7 @@ In /WFC_OddGrids/Assets/Data are the files that hold the data. These are as foll
 
 ---
 
-### tileTypeIndex.csv
+### - tileTypeIndex.csv
 This contains the data for each tile type, each line is contains each piece of information a tile needs. 
 
 The CSV is formatted as follows:
@@ -34,8 +34,8 @@ Note: _Tile ID_ should be the same as the order the tiles are in the list. The s
 
 ---
 
-### tileNeighbourMinIndex.csv and tileNeighbourMaxIndex.csv
-These tables contain the data for tile neighbour relationships. Each cell corresponds to tile A's relationship with tile B
+### - tileNeighbourMinIndex.csv and tileNeighbourMaxIndex.csv
+These tables contain the data for tile neighbour relationships. Each cell corresponds to tile A's relationship with tile B. Negative numbers represent the maximum
 
 The CSV is formatted as follows:
 | ID0's min/max of ID0 | ID0's min/max of ID1 | ID0's min/max of ID2 |
@@ -43,13 +43,24 @@ The CSV is formatted as follows:
 | ID1's min/max of ID0 | ID1's min/max of ID1 | ID1's min/max of ID2 |
 | ID2's min/max of ID0 | ID2's min/max of ID1 | ID2's min/max of ID2 |
 
-For example:
-If this was _tileNeighbourMaxIndex.csv_, tile ID 0 would never generate with more than 1 tile of ID 1 adjacent to it, and tile ID 1 and 2 would never generate next to each other
+Note: Because the Max amount of neighbours changes between grids, I have opted to use 16 as a max, as none of these grids can generate tiles with 16 neighbours.
+
+---
+
+**For Example**, if the following table was _tileNeighbourMaxIndex.csv_:
 
 | 16 | 1 | 3 |
 | -- | -- | -- |
-| 4 | 16 | 0 |
-| 16 | 0 | 16 |
+| 16 | 4 | 0 |
+| 16 | 0 | -2 |
+
+- Tile ID 0 would never generate with more than 1 tile of ID 1 adjacent to it
+- Tile ID 1 and 2 would never generate next to each other
+- Tile ID 2 has to have at least 2 of its neighbours be a different type to ID 2
+
+
+
+ 
 
 ## Sample Outputs
 
