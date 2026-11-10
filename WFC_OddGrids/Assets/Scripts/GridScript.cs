@@ -199,7 +199,7 @@ public class GridScript : MonoBehaviour
         {
             for(int j = 0 ; j < TileNeighbourIndex.TileStartIndex(i) ; j++)
             {
-                GetRandomTile().CollapseToID(j);
+                GetRandomTile().CollapseToID(i);
             }
         }
 
